@@ -1,0 +1,6 @@
+{
+    // "window.zoomLevel": 3,
+    "files.associations": {
+      "*.css": "tailwindcss"
+    },
+  }
