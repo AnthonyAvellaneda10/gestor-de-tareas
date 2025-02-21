@@ -1,0 +1,1 @@
+Aplicación de gestor de tareas hecho con Angular, TailwindCSS, Node.js, TypeScript y PostgreSQL
