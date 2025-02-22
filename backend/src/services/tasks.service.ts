@@ -1,27 +1,31 @@
-import { TasksRepository } from "../repositories/tasks.repository";
+import { ITasksRepository } from "../interfaces/ITasksRepository";
 import { Task } from "../models/task.model";
-import { updateTaskStatus } from "../utils/updateTaskStatus";
 
 export class TasksService {
-    private tasksRepository = new TasksRepository();
+    constructor(private tasksRepository: ITasksRepository) {}
 
     async createTask(task: Task): Promise<Task> {
-        const now = new Date();
-        const dueDate = new Date(task.due_datetime);
-
-        // Si la fecha de vencimiento ya pasó, asignar estado "atrasada" (4)
-        if (dueDate < now) {
-            task.status_id = 4;
+        const nowPeru = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Lima" }));
+    
+        let dueDate: Date;
+        if (task.due_datetime.toString().endsWith("Z")) {
+            const parsedUTC = new Date(task.due_datetime);
+            dueDate = new Date(parsedUTC.getTime() + (5 * 60 * 60 * 1000));
         } else {
-            task.status_id = task.status_id || 1; // Por defecto "pendiente"
+            dueDate = new Date(task.due_datetime);
         }
-
+            
+        if (dueDate.getTime() < nowPeru.getTime() + 180000) {
+             throw new Error("La fecha de vencimiento debe ser al menos 3 minutos en el futuro");
+        }
+    
+        task.status_id = task.status_id || 1;
         return this.tasksRepository.createTask(task);
-    }
+    }        
 
     async getTasks(): Promise<Task[]> {
         const tasks = await this.tasksRepository.getTasks();
-        await updateTaskStatus(tasks, this.tasksRepository);
+        await this.updateTaskStatusForOverdueTasks(tasks);
         return tasks;
     }
 
@@ -31,24 +35,31 @@ export class TasksService {
             throw new Error("Tarea no encontrada");
         }
 
-        // Determinar el nuevo estado según el estado actual
         let newStatusId: number;
         if (task.status_id === 1) {
-            newStatusId = 2; // De pendiente a en progreso
+            newStatusId = 2;
         } else if (task.status_id === 2) {
-            newStatusId = 3; // De en progreso a completado
+            newStatusId = 3;
         } else if (task.status_id === 3 || task.status_id === 4) {
             throw new Error("No se puede actualizar la tarea");
         } else {
             throw new Error("Estado desconocido");
         }
 
-        // Actualizar la tarea y retornar el resultado
         const updatedTask = await this.tasksRepository.updateTaskStatus(taskId, newStatusId);
         return updatedTask;
     }
 
     async deleteTask(taskId: number): Promise<boolean> {
         return this.tasksRepository.deleteTask(taskId);
+    }
+
+    private async updateTaskStatusForOverdueTasks(tasks: Task[]): Promise<void> {
+        const now = new Date();
+        for (const task of tasks) {
+            if (task.due_datetime && task.due_datetime < now && (task.status_id === 1 || task.status_id === 2)) {
+                await this.tasksRepository.updateTaskStatus(task.id!, 4);
+            }
+        }
     }
 }
