@@ -1,0 +1,50 @@
+<section class="container p-4 min-h-[70vh]">
+  @if (isLoading()) {
+  <app-skeleton />
+  } @else { @if (tasks().length > 0) {
+  <div class="grid gap-6 md:grid-cols-4">
+    <app-kanban-column
+      title="Pendiente"
+      color="bg-[#FF9F3C]"
+      [tasks]="pendingTasks"
+      (deleteTask)="deleteTask($event)"
+      (updateTaskStatusClick)="updateStatusTask($event)"
+    />
+    <app-kanban-column
+      title="En progreso"
+      color="bg-blue-500"
+      [tasks]="inProgressTasks"
+      (deleteTask)="deleteTask($event)"
+      (updateTaskStatusClick)="updateStatusTask($event)"
+    />
+    <app-kanban-column
+      title="Completado"
+      color="bg-[#2AC670]"
+      [tasks]="completedTasks"
+      (deleteTask)="deleteTask($event)"
+      (updateTaskStatusClick)="updateStatusTask($event)"
+    />
+    <app-kanban-column
+      title="Atrasada"
+      color="bg-red-500"
+      [tasks]="overdueTasks"
+      (deleteTask)="deleteTask($event)"
+      (updateTaskStatusClick)="updateStatusTask($event)"
+    />
+  </div>
+
+  
+  } @else {
+  <div class="text-center py-8">
+    <p class="mb-4 text-base font-medium">No se ha creado ninguna tarea 🥺.</p>
+    <button
+      (click)="openModal()"
+      class="bg-[#18181b] text-[#f7f7f7] hover:bg-[#2f2f31] px-4 py-2 rounded transition duration-300"
+    >
+      Agregar tarea <span class="animate-pulse">📝</span>
+    </button>
+  </div>
+  } }
+
+  <app-add-task-modal [isOpen]="isModalOpen()" (onAdd)="addTask($event)" />
+</section>
