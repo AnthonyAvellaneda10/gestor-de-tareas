@@ -3,27 +3,27 @@ import { TasksService } from "../services/tasks.service";
 import { Task } from "../models/task.model";
 
 export class TasksController {
-    private tasksService = new TasksService();
+    constructor(private tasksService: TasksService) {} // Inyectar TasksService
 
-    constructor() {
-        this.createTask = this.createTask.bind(this);
-        this.getTasks = this.getTasks.bind(this);
-        this.deleteTask = this.deleteTask.bind(this);
-        this.updateStatus = this.updateStatus.bind(this);
+    async createTask(req: Request, res: Response, next: NextFunction) {
+        try {
+            const task: Task = req.body;
+            const newTask = await this.tasksService.createTask(task);
+            res.status(201).json(newTask);
+        } catch (error) {
+            next(error); // Pasar el error al middleware
+        }
     }
 
-    async createTask(req: Request, res: Response) {
-        const task: Task = req.body;
-        const newTask = await this.tasksService.createTask(task);
-        res.status(201).json(newTask);
+    async getTasks(req: Request, res: Response, next: NextFunction) {
+        try {
+            const tasks = await this.tasksService.getTasks();
+            res.status(200).json(tasks);
+        } catch (error) {
+            next(error); // Pasar el error al middleware
+        }
     }
 
-    async getTasks(req: Request, res: Response) {
-        const tasks = await this.tasksService.getTasks();
-        res.status(200).json(tasks);
-    }
-
-    // Nuevo método para actualizar el estado de la tarea
     async updateStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const taskId = parseInt(req.params.id, 10);
@@ -34,8 +34,7 @@ export class TasksController {
             const updatedTask = await this.tasksService.updateTaskStatus(taskId);
             res.status(200).json(updatedTask);
         } catch (error) {
-            // Puedes distinguir errores para asignar códigos de estado adecuados
-            res.status(400).json({ message: error.message });
+            next(error); // Pasar el error al middleware
         }
     }
 
@@ -53,7 +52,7 @@ export class TasksController {
                 res.status(404).json({ message: "Tarea no encontrada" });
             }
         } catch (error) {
-            next(error);
+            next(error); // Pasar el error al middleware
         }
     }
 }
