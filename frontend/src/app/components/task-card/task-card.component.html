@@ -3,8 +3,8 @@
 >
   <h3 class="font-semibold text-lg mb-2">{{ task.title }}</h3>
 
-  <div class="flex items-center justify-between text-[#71717a] text-sm">
-    <div class="flex items-center gap-4 text-sm text-muted-foreground">
+  <div class="flex flex-row md:flex-col lg:flex-row items-center justify-between text-[#71717a] text-sm">
+    <div class="flex flex-row md:flex-col lg:flex-row items-center gap-4 text-sm text-muted-foreground">
       <div class="flex items-center gap-1">
         <lucide-icon name="calendar" class="h-4 w-4"></lucide-icon>
         {{ task.due_datetime | date: 'dd/MM/yy' }}
@@ -15,7 +15,7 @@
         {{ task.due_datetime | date: 'h:mm a' }}
       </div>
     </div>
-    <div class="flex items-center gap-4 text-sm text-muted-foreground">
+    <div class="flex flex-row md:flex-col lg:flex-row mt-0 md:mt-2 lg:mt-0 items-center gap-4 text-sm text-muted-foreground">
       @if (!(task.status_id == 3 || task.status_id == 4)) {
       <button type="button" class="flex items-center gap-1 p-2 bg-[#f4f4f5] text-purple-600 hover:bg-purple-600 rounded-full hover:text-white transition duration-300" (click)="onPlayClick()" title="Actualizar estado de la tarea">
         <lucide-icon name="play" class="h-4 w-4"></lucide-icon>
