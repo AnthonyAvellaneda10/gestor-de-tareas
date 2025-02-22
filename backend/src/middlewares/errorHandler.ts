@@ -9,7 +9,7 @@ export function errorHandler(
     console.error(err.stack); // Log del error en la consola
 
     // Manejar errores específicos
-    if (err.message === "La fecha de vencimiento debe ser al menos 3 minutos en el futuro") {
+    if (err.message === "La fecha de vencimiento debe ser al menos 1 hora en el futuro") {
         res.status(400).json({ message: err.message });
         return; // Terminar la ejecución de la función
     }
