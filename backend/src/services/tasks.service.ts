@@ -15,8 +15,8 @@ export class TasksService {
             dueDate = new Date(task.due_datetime);
         }
             
-        if (dueDate.getTime() < nowPeru.getTime() + 180000) {
-             throw new Error("La fecha de vencimiento debe ser al menos 3 minutos en el futuro");
+        if (dueDate.getTime() < nowPeru.getTime() + 3600000) {
+             throw new Error("La fecha de vencimiento debe ser al menos 1 hora en el futuro");
         }
     
         task.status_id = task.status_id || 1;
