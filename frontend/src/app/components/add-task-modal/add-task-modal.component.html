@@ -1,0 +1,83 @@
+<div
+  class="z-10 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300"
+  [ngClass]="{
+    'opacity-100 pointer-events-auto': isOpen,
+    'opacity-0 pointer-events-none': !isOpen
+  }"
+>
+  <div
+    class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md transform transition-transform duration-300"
+    [ngClass]="{ 'scale-100': isOpen, 'scale-90': !isOpen }"
+  >
+    <h2 class="text-xl font-bold mb-4">Agregar Nueva Tarea</h2>
+    <form
+      [formGroup]="taskForm"
+      (submit)="handleSubmit($event)"
+      novalidate
+      class="grid gap-4"
+    >
+      <div class="grid gap-2">
+        <label for="title" class="font-medium">Título</label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          placeholder="Ingrese título"
+          class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:border-blue-500 focus:ring-blue-500 transition duration-300"
+        />
+        <!-- Mensajes de error para el título -->
+        <div
+          *ngIf="titleControl?.touched && titleControl?.invalid"
+          class="text-red-500 text-sm"
+        >
+          <div *ngIf="titleControl?.errors?.['required']">
+            El campo es obligatorio.
+          </div>
+          <div *ngIf="titleControl?.errors?.['pattern']">
+            Caracteres especiales inválidos.
+          </div>
+        </div>
+      </div>
+      <div class="grid gap-2">
+        <label for="due-date" class="font-medium">Fecha y Hora</label>
+        <input
+          id="due-date"
+          type="datetime-local"
+          formControlName="dueDate"
+          [min]="minDateTimeStr"
+          (keydown)="preventInput($event)"
+          class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:border-blue-500 focus:ring-blue-500 transition duration-300"
+        />
+        <!-- Mensajes de error para la fecha/hora -->
+        <div
+          *ngIf="dueDateControl?.touched && dueDateControl?.invalid"
+          class="text-red-500 text-sm"
+        >
+          <div *ngIf="dueDateControl?.errors?.['required']">
+            El campo es obligatorio.
+          </div>
+          <div *ngIf="dueDateControl?.errors?.['minDateTime']">
+            La fecha y hora deben ser al menos una hora adelante de la hora
+            actual.
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2">
+        <button
+          (click)="handleClose()"
+          type="button"
+          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-[#ffffff] hover:bg-[#f4f4f5] hover:text-accent-foreground h-10 px-4 py-2"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          [disabled]="taskForm.invalid"
+          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-[#f7f7f7] hover:bg-[#2f2f31] h-10 px-4 py-2"
+        >
+          Agregar tarea
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
