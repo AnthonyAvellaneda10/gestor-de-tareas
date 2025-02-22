@@ -184,4 +184,3 @@ npm run test:watch
 
 ---
 ¡Gracias por revisar mi prueba técnica! 😊
-
