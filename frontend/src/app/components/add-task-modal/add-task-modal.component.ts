@@ -32,7 +32,7 @@ export class AddTaskModalComponent {
   ngOnInit() {
     // Calcula la fecha mínima permitida: hora actual + 1 hora
     const now = new Date();
-    const minAllowed = new Date(now.getTime() + 4 * 60 * 1000);
+    const minAllowed = new Date(now.getTime() + 60 * 60 * 1000);
     this.minDateTimeDate = minAllowed;
 
     // Formateamos la fecha en "YYYY-MM-DDThh:mm"
