@@ -57,30 +57,33 @@ export class KanbanBoardComponent {
   }
   
 
-  addTask(task: { title: string; due_datetime: string }) {
-    this.taskService.addTask(task).subscribe({
+  addTask(data: { task: { title: string; due_datetime: string }; callback: (success: boolean) => void }) {
+    this.taskService.addTask(data.task).subscribe({
       next: (newTask) => {
         // Actualizamos la lista de tareas sin refrescar la página
-        this.tasks.update(tasks => [...tasks, newTask]);
-        // Cerramos el modal usando el servicio
+        this.tasks.update(tasks => [newTask, ...tasks]);
+        // Cerramos el modal
         this.modalService.closeModal();
-
         this.toast.success('Tarea agregada correctamente!', {
           position: 'top-center',
           duration: 5000,
           dismissible: true,
         });
+        // Notificamos éxito al modal para resetear el formulario
+        data.callback(true);
       },
       error: (err) => {
         console.error('Error al agregar tarea', err);
-        this.toast.error('Error al agregar la tarea', {
+        this.toast.error(err.error.message, {
           position: 'top-center',
           duration: 5000,
           dismissible: true,
         });
+        // Notificamos error para que el formulario no se resetee
+        data.callback(false);
       }
     });
-  }
+  }  
 
   updateTaskStatus(taskId: number, newStatusId: number) {
     this.tasks.update(tasks =>
