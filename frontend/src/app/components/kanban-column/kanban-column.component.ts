@@ -1,10 +1,8 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
-import { Task } from '../../core/interfaces/task.interface';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TaskCardComponent } from '@components/task-card/task-card.component';
 import { Tasks } from '@interfaces/tasks.interface';
 import { LucideAngularModule } from 'lucide-angular';
-
 
 @Component({
   selector: 'app-kanban-column',
@@ -29,11 +27,11 @@ export class KanbanColumnComponent {
     this.updateStatus.emit({ id, status });
   }
 
-  onDeleteTask(id: number) { // <- Nueva función para eliminar
+  onDeleteTask(id: number) {
     this.deleteTask.emit(id);
   }
 
-  onUpdateTaskStatusClick(id: number) { // <- Nueva función para actualizar el estado
+  onUpdateTaskStatusClick(id: number) {
     this.updateTaskStatusClick.emit(id);
   }
 }
