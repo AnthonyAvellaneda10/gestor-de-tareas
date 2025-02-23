@@ -72,10 +72,10 @@
         </button>
         <button
           type="submit"
-          [disabled]="taskForm.invalid"
+          [disabled]="taskForm.invalid || isSubmitting()"
           class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-[#f7f7f7] hover:bg-[#2f2f31] h-10 px-4 py-2"
         >
-          Agregar tarea
+        {{ isSubmitting() ? 'Añadiendo' : 'Agregar tarea' }}
         </button>
       </div>
     </form>

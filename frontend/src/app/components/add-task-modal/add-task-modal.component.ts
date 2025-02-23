@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, signal } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ModalService } from '@services/modal.service';
 
@@ -20,7 +20,12 @@ export function minDateTimeValidator(minDateTime: Date): ValidatorFn {
 })
 export class AddTaskModalComponent {
   @Input() isOpen = false;
-  @Output() onAdd = new EventEmitter<any>();
+  @Output() onAdd = new EventEmitter<{
+    task: { title: string; due_datetime: string };
+    callback: (success: boolean) => void;
+  }>();
+
+  isSubmitting = signal(false);
   private modalService = inject(ModalService);
 
   taskForm!: FormGroup;
@@ -65,21 +70,28 @@ export class AddTaskModalComponent {
       return;
     }
     const { title, dueDate } = this.taskForm.value;
-
     const localDate = new Date(dueDate);
-
-    // Usamos la función helper para obtener la fecha en formato local ISO
     const isoLocal = this.getLocalISOString(localDate);
-
     const newTask = {
       title,
-      due_datetime: isoLocal  // Ahora se conserva la hora local
+      due_datetime: isoLocal
     };
 
-    this.onAdd.emit(newTask);
-    this.taskForm.reset();
-  }
+    // Cambiar estado a "Añadiendo"
+    this.isSubmitting.set(true);
 
+    // Emitir el evento incluyendo un callback para recibir respuesta
+    this.onAdd.emit({
+      task: newTask,
+      callback: (success: boolean) => {
+        this.isSubmitting.set(false);
+        if (success) {
+          // Si la tarea se agregó correctamente, reseteamos el formulario
+          this.taskForm.reset();
+        }
+      }
+    });
+  }
 
   handleClose() {
     this.modalService.closeModal();
