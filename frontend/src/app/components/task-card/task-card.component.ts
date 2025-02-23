@@ -19,7 +19,7 @@ export class TaskCardComponent {
     this.updateStatus.emit({ id: this.task.id, status });
   }
 
-  onPlayClick() { // <- Nueva función para actualizar el estado
+  onPlayClick() {
     this.updateStatusClick.emit(this.task.id);
   }
 
