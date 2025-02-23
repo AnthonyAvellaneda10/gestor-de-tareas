@@ -20,7 +20,7 @@ CREATE TABLE tasks (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     due_datetime TIMESTAMP,
-    created_at TIMESTAMP DEFAULT current_timestamp,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     status_id INTEGER NOT NULL DEFAULT 1 REFERENCES status(id)
 );
 
@@ -36,7 +36,9 @@ INSERT INTO tasks (title, due_datetime) VALUES
     ('Preparar presentación mensual', '2025-02-18 09:00:00'); -- Pendiente (pero vencida)
     
 -- Ver la información de la tabla 'tasks'
-select * from tasks;
+SELECT * 
+FROM tasks 
+ORDER BY created_at DESC;
 
 -- Ver la información de la tabla 'status'
 select * from status;
