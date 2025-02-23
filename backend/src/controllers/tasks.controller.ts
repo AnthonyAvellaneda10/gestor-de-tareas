@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { TasksService } from "../services/tasks.service";
 import { Task } from "../models/task.model";
+import { toLocalISOString } from "../utils/localDate";
 
 export class TasksController {
-    constructor(private tasksService: TasksService) {} // Inyectar TasksService
+    constructor(private tasksService: TasksService) { } // Inyectar TasksService
 
     async createTask(req: Request, res: Response, next: NextFunction) {
         try {
@@ -18,9 +19,17 @@ export class TasksController {
     async getTasks(req: Request, res: Response, next: NextFunction) {
         try {
             const tasks = await this.tasksService.getTasks();
-            res.status(200).json(tasks);
+
+            // Formateamos las fechas a formato ISO pero con la hora local (por ejemplo, para America/Lima)
+            const tasksFormatted = tasks.map(task => ({
+                ...task,
+                due_datetime: toLocalISOString(new Date(task.due_datetime)),
+                created_at: toLocalISOString(new Date(task.created_at))
+            }));
+
+            res.status(200).json(tasksFormatted);
         } catch (error) {
-            next(error); // Pasar el error al middleware
+            next(error);
         }
     }
 
