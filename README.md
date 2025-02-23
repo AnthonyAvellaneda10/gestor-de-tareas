@@ -39,20 +39,20 @@ npm install
 
     - Crea una base de datos en PostgreSQL llamada `task_manager`.
 
-    - Ejecuta el script SQL proporcionado en `database.sql` para crear las tablas e insertar datos iniciales.
+    - Copia el script SQL proporcionado en `database.sql` para crear las tablas e insertar datos iniciales.
 
     - Configura las variables de entorno:
 
-Crea un archivo .env en la carpeta del proyecto `backend` y agrega las siguientes variables:
+      - Crea un archivo .env en la carpeta del proyecto `backend` y agrega las siguientes variables:
 
-```bash
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=tu-usuario
-DB_PASSWORD=tu-contraseña
-DB_DATABASE=task_manager
-PORT=5000
-```
+          ```bash
+          DB_HOST=localhost
+          DB_PORT=5432
+          DB_USER=tu-usuario
+          DB_PASSWORD=tu-contraseña
+          DB_DATABASE=task_manager
+          PORT=5000
+          ```
 
 4. Ejecutar el servidor
 
@@ -181,6 +181,3 @@ npm run test:watch
 - **Backend:** Asegúrate de que PostgreSQL esté en ejecución y configurado correctamente.
 - **Frontend:** Asegúrate de que el backend esté en ejecución antes de iniciar el frontend.
 - **Pruebas:** Las pruebas unitarias están enfocadas en la lógica de negocio del backend.
-
----
-¡Gracias por revisar mi prueba técnica! 😊
